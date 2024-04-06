@@ -18,9 +18,9 @@ class Map1 extends React.Component {
       center: defaultCenter,
       address: "",
       zoom: 8,
-      showStreetView: false, // Track whether Street View is shown
+      showStreetView: false,
     };
-    this.mapRef = React.createRef(); // Create a reference to the Google Map
+    this.mapRef = React.createRef();
   }
 
   handleAddressChange = (event) => {
@@ -40,12 +40,17 @@ class Map1 extends React.Component {
     });
   };
 
+  handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      this.handleSearch();
+    }
+  };
+
   handleMapClick = () => {
     if (this.state.showStreetView) {
       const map = this.mapRef.current;
       const streetViewService = new window.google.maps.StreetViewService();
 
-      // Get the nearest street view position
       streetViewService.getPanorama({ location: this.state.center, radius: 50 }, (data, status) => {
         if (status === "OK") {
           const panorama = new window.google.maps.StreetViewPanorama(
@@ -53,8 +58,6 @@ class Map1 extends React.Component {
             { position: data.location.latLng }
           );
           map.setStreetView(panorama);
-        } else {
-          console.error("Street View data not found for this location.");
         }
       });
     }
@@ -64,39 +67,31 @@ class Map1 extends React.Component {
     const { address } = this.state;
 
     return (
-      <div id="total" style={{ height: "100vh", width: "100vw", position: "relative" }}>
-        <div style={{ position: "absolute", top: 10, left: 10, zIndex: 1 }}>
+      <div style={{ position: "relative", height: "100vh" }}>
+        <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", zIndex: 1, paddingTop: "20px" }}>
           <input
             type="text"
             value={address}
             onChange={this.handleAddressChange}
-            placeholder="Enter an address"
+            onKeyPress={this.handleKeyPress}
+            placeholder="Enter an address, include city and state"
+            style={{ padding: "10px", borderRadius: "5px", marginRight: "10px", border: "1px solid #ccc", width: "300px" }} // Adjust width here
           />
-          <button onClick={this.handleSearch}>Search</button>
+          <button onClick={this.handleSearch} style={{ padding: "10px 20px", borderRadius: "5px", backgroundColor: "#007bff", color: "#fff", border: "none", cursor: "pointer" }}>Search</button>
         </div>
         <LoadScriptNext googleMapsApiKey={APIkey}>
           <GoogleMap
-            ref={this.mapRef} // Set the reference to the Google Map
+            ref={this.mapRef}
             mapContainerStyle={{ height: "100%", width: "100%" }}
             zoom={this.state.zoom}
             center={this.state.center}
-            onClick={this.handleMapClick} // Handle map click to show Street View
+            onClick={this.handleMapClick}
           >
             {this.state.showStreetView && (
               <StreetViewPanorama id="street-view" position={this.state.center} visible={true} />
             )}
           </GoogleMap>
         </LoadScriptNext>
-        <div
-          style={{
-            position: "absolute",
-            left: "50%",
-            bottom: "20px",
-            transform: "translateX(-50%)",
-            width: "80%",
-            maxWidth: "600px",
-          }}
-        ></div>
       </div>
     );
   }
