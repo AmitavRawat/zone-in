@@ -19,6 +19,7 @@ class Map1 extends React.Component {
       address: "",
       zoom: 8,
       showStreetView: false,
+      message: "",
     };
     this.mapRef = React.createRef();
   }
@@ -46,36 +47,27 @@ class Map1 extends React.Component {
     }
   };
 
-  handleMapClick = () => {
-    if (this.state.showStreetView) {
-      const map = this.mapRef.current;
-      const streetViewService = new window.google.maps.StreetViewService();
-
-      streetViewService.getPanorama({ location: this.state.center, radius: 50 }, (data, status) => {
-        if (status === "OK") {
-          const panorama = new window.google.maps.StreetViewPanorama(
-            document.getElementById("street-view"),
-            { position: data.location.latLng }
-          );
-          map.setStreetView(panorama);
-        }
-      });
-    }
+  handleSendMessage = () => {
+    const { message } = this.state;
+    // Do something with the message, for now, we'll just log it
+    console.log("Message:", message);
+    // Clear the message input
+    this.setState({ message: "" });
   };
 
   render() {
-    const { address } = this.state;
+    const { address, message } = this.state;
 
     return (
-      <div style={{ position: "relative", height: "100vh" }}>
+      <div style={{ position: "relative", height: "100vh", width: "100%" }}>
         <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", zIndex: 1, paddingTop: "20px" }}>
           <input
             type="text"
             value={address}
             onChange={this.handleAddressChange}
             onKeyPress={this.handleKeyPress}
-            placeholder="Enter an address, include city and state"
-            style={{ padding: "10px", borderRadius: "5px", marginRight: "10px", border: "1px solid #ccc", width: "300px" }} // Adjust width here
+            placeholder="Enter an address"
+            style={{ padding: "10px", borderRadius: "5px", marginRight: "10px", border: "1px solid #ccc", width: "400px" }} // Adjust width here
           />
           <button onClick={this.handleSearch} style={{ padding: "10px 20px", borderRadius: "5px", backgroundColor: "#007bff", color: "#fff", border: "none", cursor: "pointer" }}>Search</button>
         </div>
@@ -85,13 +77,31 @@ class Map1 extends React.Component {
             mapContainerStyle={{ height: "100%", width: "100%" }}
             zoom={this.state.zoom}
             center={this.state.center}
-            onClick={this.handleMapClick}
           >
             {this.state.showStreetView && (
-              <StreetViewPanorama id="street-view" position={this.state.center} visible={true} />
+              <StreetViewPanorama id="street-view" position={this.state.center} visible={true} options={{ containerStyle: { height: "80vh", width: "100%" }}} />
             )}
           </GoogleMap>
         </LoadScriptNext>
+        {this.state.showStreetView && (
+          <div style={{ position: "absolute", bottom: "0", left: "50%", transform: "translateX(-50%)", zIndex: 1, width: "100%" }}>
+            <div style={{ background: "#f9f9f9", padding: "20px", borderRadius: "10px", boxShadow: "0 4px 8px rgba(0,0,0,0.1)", maxWidth: "600px", margin: "0 auto" }}>
+              <input 
+                type="text" 
+                value={message} 
+                onChange={(e) => this.setState({ message: e.target.value })} 
+                placeholder="Type your message..." 
+                style={{ padding: "10px", borderRadius: "5px", border: "1px solid #ccc", width: "calc(100% - 80px)", marginRight: "10px" }} 
+              />
+              <button 
+                onClick={this.handleSendMessage} 
+                style={{ padding: "10px 20px", borderRadius: "5px", backgroundColor: "#007bff", color: "#fff", border: "none", cursor: "pointer" }}
+              >
+                Send
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
