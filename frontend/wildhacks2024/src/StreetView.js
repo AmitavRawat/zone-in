@@ -71,7 +71,7 @@ class Map1 extends React.Component {
             value={address}
             onChange={this.handleAddressChange}
             onKeyPress={this.handleKeyPress}
-            placeholder="Enter an address"
+            placeholder="Enter an address, include city and state"
             style={{ padding: "10px", borderRadius: "5px", marginRight: "10px", border: "1px solid #ccc", width: "400px" }} // Adjust width here
           />
           <button onClick={this.handleSearch} style={{ padding: "10px 20px", borderRadius: "5px", backgroundColor: "#007bff", color: "#fff", border: "none", cursor: "pointer" }}>Search</button>
@@ -89,7 +89,7 @@ class Map1 extends React.Component {
           </GoogleMap>
         </LoadScriptNext>
         {this.state.showStreetView && (
-          <div style={{ position: "absolute", bottom: "20px", left: "50%", transform: "translateX(-50%)", zIndex: 1, width: "100%" }}>
+          <div style={{ position: "absolute", bottom: "0", left: "50%", transform: "translateX(-50%)", zIndex: 1, width: "100%" }}>
             <div style={{ background: "rgba(255, 255, 255, 0.7)", padding: "10px", borderRadius: "5px", boxShadow: "0 4px 8px rgba(0,0,0,0.1)", maxWidth: "400px", margin: "0 auto", display: "flex" }}>
               <input 
                 type="text" 
