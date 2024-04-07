@@ -21,12 +21,17 @@ class Map1 extends React.Component {
       zoom: 8,
       showStreetView: false,
       screenshotTaken: false,
+      userInput: "",
     };
     this.mapRef = React.createRef();
   }
 
   handleAddressChange = (event) => {
     this.setState({ address: event.target.value });
+  };
+
+  handleUserInputChange = (event) => {
+    this.setState({ userInput: event.target.value });
   };
 
   handleSearch = () => {
@@ -71,52 +76,94 @@ class Map1 extends React.Component {
     }
   };
 
-  render() {
-    const { address, zoom, center, showStreetView, screenshotTaken } =
-      this.state;
+  // render() {
+  //   const {
+  //     address,
+  //     zoom,
+  //     center,
+  //     showStreetView,
+  //     screenshotTaken,
+  //     userInput,
+  //   } = this.state;
 
+  render() {
+    const {
+      address,
+      zoom,
+      center,
+      showStreetView,
+      screenshotTaken,
+      userInput,
+    } = this.state;
+
+    // Conditional rendering after screenshot
+    if (screenshotTaken) {
+      return (
+        <div style={{ display: "flex", height: "100vh" }}>
+          <iframe
+            title="chatbot"
+            src="https://embed.pickaxeproject.com/axe?id=ZoneIn_A5TT2&mode=embed_gold&host=beta&..."
+            style={{ width: "50%", height: "100%", border: "none" }}
+            frameBorder="0"
+          />
+          <textarea
+            value={userInput}
+            onChange={this.handleUserInputChange}
+            placeholder="Enter your input here..."
+            style={{
+              width: "50%",
+              height: "100%",
+              padding: "10px",
+              border: "1px solid #ccc",
+              resize: "none",
+            }}
+          />
+        </div>
+      );
+    }
+
+    // Default rendering before screenshot
     return (
-      <div style={{ height: "100vh", width: "100%" }} ref={this.mapRef}>
-        <div
+      <div style={{ height: "100vh", position: "relative" }} ref={this.mapRef}>
+        <input
+          type="text"
+          value={address}
+          onChange={this.handleAddressChange}
+          onKeyPress={this.handleKeyPress}
+          placeholder="Enter an address, include city and state"
           style={{
             position: "absolute",
             top: "10px",
             left: "50%",
             transform: "translateX(-50%)",
+            padding: "10px",
+            borderRadius: "5px",
+            border: "1px solid #ccc",
+            zIndex: 10,
+            width: "300px",
+          }}
+        />
+        <button
+          onClick={this.handleSearch}
+          style={{
+            position: "absolute",
+            top: "10px",
+            left: "50%",
+            marginLeft: "160px", // Adjust based on input width + some padding
+            padding: "10px 20px",
+            borderRadius: "5px",
+            backgroundColor: "#007bff",
+            color: "#fff",
+            border: "none",
+            cursor: "pointer",
             zIndex: 10,
           }}
         >
-          <input
-            type="text"
-            value={address}
-            onChange={this.handleAddressChange}
-            onKeyPress={this.handleKeyPress}
-            placeholder="Enter an address, include city and state"
-            style={{
-              padding: "10px",
-              borderRadius: "5px",
-              marginRight: "10px",
-              border: "1px solid #ccc",
-              width: "300px",
-            }}
-          />
-          <button
-            onClick={this.handleSearch}
-            style={{
-              padding: "10px 20px",
-              borderRadius: "5px",
-              backgroundColor: "#007bff",
-              color: "#fff",
-              border: "none",
-              cursor: "pointer",
-            }}
-          >
-            Search
-          </button>
-        </div>
+          Search
+        </button>
         <LoadScriptNext googleMapsApiKey={APIkey}>
           <GoogleMap
-            mapContainerStyle={{ height: "100%", width: "100%" }}
+            mapContainerStyle={{ height: "100vh", width: "100%" }}
             zoom={zoom}
             center={center}
           >
@@ -128,49 +175,26 @@ class Map1 extends React.Component {
               />
             )}
           </GoogleMap>
+          {showStreetView && (
+            <button
+              onClick={this.takeScreenshot}
+              style={{
+                position: "absolute",
+                bottom: "20px",
+                left: "45%",
+                padding: "10px 20px",
+                borderRadius: "5px",
+                backgroundColor: "#007bff",
+                color: "#fff",
+                border: "none",
+                cursor: "pointer",
+                zIndex: 10,
+              }}
+            >
+              Take Screenshot
+            </button>
+          )}
         </LoadScriptNext>
-        {showStreetView && (
-          <button
-            onClick={this.takeScreenshot}
-            disabled={screenshotTaken}
-            style={{
-              position: "absolute",
-              bottom: "20px",
-              left: "50%",
-              transform: "translateX(-50%)",
-              padding: "10px 20px",
-              borderRadius: "5px",
-              backgroundColor: screenshotTaken ? "#cccccc" : "#007bff",
-              color: "#fff",
-              border: "none",
-              cursor: "pointer",
-              zIndex: 10,
-            }}
-          >
-            {screenshotTaken ? "Screenshot Taken" : "Save Screenshot"}
-          </button>
-        )}
-
-        {screenshotTaken && (
-          // Ensure the iframe is not hidden by any parent elements with overflow: hidden;
-          // and is added to the DOM after the screenshot is taken.
-          <iframe
-            title="chatbot"
-            src="https://embed.pickaxeproject.com/axe?id=ZoneIn_A5TT2&mode=embed_gold&host=beta&..."
-            style={{
-              position: "fixed",
-              top: 0,
-              right: 0,
-              bottom: 0,
-              left: 0,
-              width: "100vw",
-              height: "100vh",
-              border: "none",
-              zIndex: 1000, // Ensure it's above everything else
-            }}
-            frameBorder="0"
-          ></iframe>
-        )}
       </div>
     );
   }
