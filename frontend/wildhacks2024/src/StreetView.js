@@ -20,6 +20,7 @@ class Map1 extends React.Component {
       address: "",
       zoom: 8,
       showStreetView: false,
+      screenshotTaken: false,
     };
     this.mapRef = React.createRef();
   }
@@ -55,25 +56,24 @@ class Map1 extends React.Component {
   };
 
   takeScreenshot = () => {
-    // Delay the screenshot by X milliseconds to allow the map to render.
-    // Adjust the delay time as necessary. Here it's set to 3000 milliseconds (3 seconds).
-    setTimeout(() => {
-      if (this.mapRef.current) {
-        html2canvas(this.mapRef.current, { useCORS: true }).then((canvas) => {
-          const imgData = canvas.toDataURL("image/png");
-          const link = document.createElement("a");
-          link.href = imgData;
-          link.download = "street-view-screenshot.png";
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        });
-      }
-    }, 10000);
+    if (this.mapRef.current) {
+      html2canvas(this.mapRef.current, { useCORS: true }).then((canvas) => {
+        const imgData = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.href = imgData;
+        link.download = "street-view-screenshot.png";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        this.setState({ screenshotTaken: true });
+      });
+    }
   };
 
   render() {
-    const { address, zoom, center, showStreetView } = this.state;
+    const { address, zoom, center, showStreetView, screenshotTaken } =
+      this.state;
 
     return (
       <div style={{ height: "100vh", width: "100%" }} ref={this.mapRef}>
@@ -132,6 +132,7 @@ class Map1 extends React.Component {
         {showStreetView && (
           <button
             onClick={this.takeScreenshot}
+            disabled={screenshotTaken}
             style={{
               position: "absolute",
               bottom: "20px",
@@ -139,15 +140,36 @@ class Map1 extends React.Component {
               transform: "translateX(-50%)",
               padding: "10px 20px",
               borderRadius: "5px",
-              backgroundColor: "#007bff",
+              backgroundColor: screenshotTaken ? "#cccccc" : "#007bff",
               color: "#fff",
               border: "none",
               cursor: "pointer",
               zIndex: 10,
             }}
           >
-            Save Screenshot
+            {screenshotTaken ? "Screenshot Taken" : "Save Screenshot"}
           </button>
+        )}
+
+        {screenshotTaken && (
+          // Ensure the iframe is not hidden by any parent elements with overflow: hidden;
+          // and is added to the DOM after the screenshot is taken.
+          <iframe
+            title="chatbot"
+            src="https://embed.pickaxeproject.com/axe?id=ZoneIn_A5TT2&mode=embed_gold&host=beta&..."
+            style={{
+              position: "fixed",
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+              width: "100vw",
+              height: "100vh",
+              border: "none",
+              zIndex: 1000, // Ensure it's above everything else
+            }}
+            frameBorder="0"
+          ></iframe>
         )}
       </div>
     );
