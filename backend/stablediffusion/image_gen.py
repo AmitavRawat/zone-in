@@ -4,6 +4,7 @@ import clip
 from PIL import Image as PILImage
 import torch
 from io import BytesIO
+import requests
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -29,7 +30,7 @@ def generate_image(input_image, description):
         image_features = model.encode_image(image)
 
     # For demonstration, we use a static prompt. Integrate actual usage accordingly
-    detailed_prompt = f"An expanded version of the house, based on the original features: {description}"
+    detailed_prompt = f"Create a super realistic render of the image considering the modifications and based on the original features of the house: {description}"
 
     # Call OpenAI API to generate the image
     response = openai.Image.create(
@@ -71,4 +72,4 @@ def main():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port = 8001)
