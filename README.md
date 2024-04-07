@@ -10,6 +10,14 @@ So now, our users are one prompt away from knowing if they can exapand their dri
 
 ### How we built this 
 
+Let's talk about the model we really take pride in!
+
+First, we start by loading in the documents and splitting the text using TextSplitter in which we chunked out the data bceause we didn't have the computing power to deal with the over 800 pages of zoning code data in evanston alone. Then , we used an embeddings model through HuggingFace to utilize the power of semantic search more effecitvely as it groups semantically similar words more closely to create vector embeddings. These embedddings are stored in a vectorestore powered by ChromaDB which allow the model to retrieve the information by semantic similarity rather than keyword matching. Finally the prompt is engineered nad passed through the model constructed by Langchain, which further goes into our RAG  (Retrieval-Augmented Generation) chain that uses the retriever to gain context, formats the query to be the prompt, and uses the GPT-4 model developed earlier via the Open AI API to generate an output that is formatted and passed through in the display. Impressive isn't it! 
+
+Now , our customised and improved image generation model!
+
+Our approach for the stable diffusion model is rather unique - believe us. Initially, we started by working image to image models. Firstly, we started by using CLIP (Contrastive Language–Image Pre-training) . However, with a lack of documentation and a rather new concept, we looked into other ways to execute out stable diffusion. now we have a multimodal process. first we start by passing in an image of a house and using context system messages via langchain API to gear the model to analyze the image at the finest grain it can. then using its text output of the analysis it integrates the modification and analyzes the features that would be changed. finally, given all of that we pass the prompt passed with all feature information gathered into a DALL E model that generates teh closest realistic render possible. we have recognized  that there are some faults in the images but DALL E is obviously still a developing technology.
+
 
 ### What it does
 
