@@ -101,7 +101,7 @@ function App() {
             if (event.target.id === sphereUUID) {
               setTimeout(() => {
                 setShowMap(true);
-              }, 3500);
+              }, 2000);
               //setShowMap(true); // Will cause the Map1 component to render
             }
           });

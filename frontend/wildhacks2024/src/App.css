@@ -1,0 +1,23 @@
+.dropzone-area {
+    height: 10%; /* Adjust height if needed */
+    background-color: #f0f0f0; /* Light, neutral background */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed #ccc;  /* Dashed border for visual cue */
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 10px; /* Add spacing below dropzone */
+  }
+  
+  .dropzone-area p {
+    text-align: center;
+    margin-bottom: 10px;
+  } 
+  
+  .photos-uploaded {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  

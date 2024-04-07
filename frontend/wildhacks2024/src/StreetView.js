@@ -7,6 +7,8 @@ import {
 import html2canvas from "html2canvas";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Dropzone from 'react-dropzone'; // Import the drag-and-drop component
+
 
 const APIkey = "AIzaSyCiUPBb4wLUT7z6z5jRTgR2q2LCpcdVgno";
 const defaultCenter = {
@@ -23,8 +25,9 @@ class Map1 extends React.Component {
       address: "",
       zoom: 8,
       showStreetView: false,
-      screenshotTaken: false,
+      screenshotTaken: true,
       userInput: "",
+      image: null,
     };
     this.mapRef = React.createRef();
   }
@@ -35,6 +38,46 @@ class Map1 extends React.Component {
 
   handleUserInputChange = (event) => {
     this.setState({ userInput: event.target.value });
+  };
+
+  onDrop = (acceptedFiles) => {
+    if (acceptedFiles.length > 0) {
+      this.setState({ image: acceptedFiles[0] });
+      toast.success("Image uploaded successfully!");
+    } else {
+      toast.error("Please drop a valid PNG file.");
+    }
+  };
+
+  // Handle input text and image sending to API
+  handleSendToApi = async (event) => {
+    event.preventDefault();
+    const { userInput, image } = this.state;
+
+    if (!userInput || !image) {
+      toast.error("Please provide both text and an image.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('text', userInput);
+    formData.append('image', image);
+
+    try {
+      const response = await fetch('http://localhost:3000/main', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (response.ok) {
+        this.setState({ userInput: '', image: null });
+        toast.success("Message and image sent!");
+      } else {
+        throw new Error('API request failed');
+      }
+    } catch (error) {
+      toast.error(`Error sending data: ${error.message}`);
+    }
   };
 
   handleSearch = () => {
@@ -79,6 +122,10 @@ class Map1 extends React.Component {
     }
   };
 
+  takeScreenshotBool = () => {
+    this.setState({screenshotTaken: true})
+  }
+
   // render() {
   //   const {
   //     address,
@@ -110,19 +157,40 @@ class Map1 extends React.Component {
             frameBorder="0"
           />
           <div style={{width:"50%", height:"100%", backgroundColor: "#fff"}}>
-            <div style={{width:"100%", height:"90%", backgroundColor: "#000"}} />
+            <div style={{width:"100%", height:"75%", backgroundColor: "#fff"}} />
+            <Dropzone onDrop={this.onDrop} accept=".png" multiple={false}>
+            {({getRootProps, getInputProps}) => (
+              <div {...getRootProps({style: { /* Add styles as needed */ } })}>
+                <input {...getInputProps()} />
+                <p style={{fontFamily: "Roboto"}}>Drag and drop a PNG file here or click to select: {this.state.image == null ? "No Image" : "Image Uploaded"}</p>
+              </div>
+            )}
+          </Dropzone>
+
           <textarea
             value={userInput}
             onChange={this.handleUserInputChange}
-            placeholder="Enter our input here..."
+            placeholder="Enter your input here..."
             style={{
-              width: "100%",
+              width: "90%",
               height: "10%",
               padding: "10px",
               border: "1px solid #ccc",
               resize: "none",
             }}
           />
+          <button style={{
+            width: "93%",
+            padding: "10px 20px",
+            borderRadius: "5px",
+            backgroundColor: "#007bff",
+            color: "#fff",
+            border: "none",
+            cursor: "pointer",
+            zIndex: 10,
+          }}
+          onClick={this.handleSendToApi}>Generate Image</button> {/* Add this button */}
+
           </div>
          
         </div>
@@ -184,7 +252,12 @@ class Map1 extends React.Component {
           </GoogleMap>
           {showStreetView && (
             <button
-              onClick={() => toast("Screenshot Saved!")}
+            onClick={() => {
+              toast("Screenshot Saved!");
+              setTimeout(() => {
+                  this.takeScreenshotBool();
+              }, 1000); // 3000 milliseconds = 3 seconds
+          }}
               style={{
                 position: "absolute",
                 bottom: "20px",
