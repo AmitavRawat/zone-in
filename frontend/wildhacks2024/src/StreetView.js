@@ -43,12 +43,17 @@ class Map1 extends React.Component {
 
   handleKeyPress = (event) => {
     if (event.key === "Enter") {
+      if (event.shiftKey) {
+        return; // Allow multiline input
+      }
+      event.preventDefault(); // Prevent default form submission behavior
       this.handleSearch();
     }
   };
 
   handleSendMessage = () => {
     const { message } = this.state;
+    if (message.trim() === "") return;
     // Do something with the message, for now, we'll just log it
     console.log("Message:", message);
     // Clear the message input
@@ -84,18 +89,19 @@ class Map1 extends React.Component {
           </GoogleMap>
         </LoadScriptNext>
         {this.state.showStreetView && (
-          <div style={{ position: "absolute", bottom: "0", left: "50%", transform: "translateX(-50%)", zIndex: 1, width: "100%" }}>
-            <div style={{ background: "#f9f9f9", padding: "20px", borderRadius: "10px", boxShadow: "0 4px 8px rgba(0,0,0,0.1)", maxWidth: "600px", margin: "0 auto" }}>
+          <div style={{ position: "absolute", bottom: "20px", left: "50%", transform: "translateX(-50%)", zIndex: 1, width: "100%" }}>
+            <div style={{ background: "rgba(255, 255, 255, 0.7)", padding: "10px", borderRadius: "5px", boxShadow: "0 4px 8px rgba(0,0,0,0.1)", maxWidth: "400px", margin: "0 auto", display: "flex" }}>
               <input 
                 type="text" 
                 value={message} 
                 onChange={(e) => this.setState({ message: e.target.value })} 
+                onKeyPress={(e) => { if (e.key === "Enter") this.handleSendMessage(); }} // Trigger handleSendMessage on Enter key press
                 placeholder="Type your message..." 
-                style={{ padding: "10px", borderRadius: "5px", border: "1px solid #ccc", width: "calc(100% - 80px)", marginRight: "10px" }} 
+                style={{ flex: "1", padding: "10px", borderRadius: "5px", border: "1px solid #ccc", marginRight: "10px" }} 
               />
               <button 
                 onClick={this.handleSendMessage} 
-                style={{ padding: "10px 20px", borderRadius: "5px", backgroundColor: "#007bff", color: "#fff", border: "none", cursor: "pointer" }}
+                style={{ padding: "10px 20px", borderRadius: "5px", backgroundColor: "#007bff", color: "#fff", border: "none", cursor: "pointer", opacity: "0.8" }}
               >
                 Send
               </button>
