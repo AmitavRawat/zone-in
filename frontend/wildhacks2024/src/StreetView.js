@@ -5,17 +5,15 @@ import {
   StreetViewPanorama,
 } from "@react-google-maps/api";
 import html2canvas from "html2canvas";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import Dropzone from 'react-dropzone'; // Import the drag-and-drop component
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Dropzone from "react-dropzone"; // Import the drag-and-drop component
 
-
-const APIkey = "AIzaSyCiUPBb4wLUT7z6z5jRTgR2q2LCpcdVgno";
+const APIkey = "";
 const defaultCenter = {
   lat: 42.045597,
   lng: -87.688568,
 };
-
 
 class Map1 extends React.Component {
   constructor(props) {
@@ -25,9 +23,10 @@ class Map1 extends React.Component {
       address: "",
       zoom: 8,
       showStreetView: false,
-      screenshotTaken: true,
+      screenshotTaken: false,
       userInput: "",
       image: null,
+      responseImage: null,
     };
     this.mapRef = React.createRef();
   }
@@ -60,21 +59,41 @@ class Map1 extends React.Component {
     }
 
     const formData = new FormData();
-    formData.append('text', userInput);
-    formData.append('image', image);
+    formData.append("text", userInput);
+    formData.append("image", image, "house.png");
+    console.log(image);
 
     try {
-      const response = await fetch('http://localhost:3000/main', {
-        method: 'POST',
-        body: formData
+      const response = await fetch("http://localhost:8001/main", {
+        method: "POST",
+        body: formData,
+        redirect: "follow",
       });
+      console.log(response);
 
-      if (response.ok) {
-        this.setState({ userInput: '', image: null });
-        toast.success("Message and image sent!");
-      } else {
-        throw new Error('API request failed');
+      if (!response.ok) {
+        toast.error(`Error sending data`);
       }
+
+      const blob = await response.blob();
+      const imageSrc = URL.createObjectURL(blob);
+
+      this.setState({ responseImage: imageSrc });
+
+      //   if (response.ok) {
+
+      //     // Add the new image URL to the existing list of response images in the state
+      //     this.setState({
+      //       userInput: '',
+      //       image: null,
+      //       responseImages: [...this.state.responseImages, imageUrl]
+      //     });
+      //     console.log(this.state.responseImages);
+
+      //     toast.success("Message and image sent!");
+      //   } else {
+      //     throw new Error('API request failed');
+      //   }
     } catch (error) {
       toast.error(`Error sending data: ${error.message}`);
     }
@@ -123,8 +142,8 @@ class Map1 extends React.Component {
   };
 
   takeScreenshotBool = () => {
-    this.setState({screenshotTaken: true})
-  }
+    this.setState({ screenshotTaken: true });
+  };
 
   // render() {
   //   const {
@@ -156,43 +175,59 @@ class Map1 extends React.Component {
             style={{ width: "50%", height: "90%", border: "none" }}
             frameBorder="0"
           />
-          <div style={{width:"50%", height:"100%", backgroundColor: "#fff"}}>
-            <div style={{width:"100%", height:"75%", backgroundColor: "#fff"}} />
+          <div
+            style={{ width: "50%", height: "100%", backgroundColor: "#fff" }}
+          >
+            <img src={this.state.responseImage} />
+            <div
+              style={{ width: "100%", height: "75%", backgroundColor: "#fff" }}
+            />
             <Dropzone onDrop={this.onDrop} accept=".png" multiple={false}>
-            {({getRootProps, getInputProps}) => (
-              <div {...getRootProps({style: { /* Add styles as needed */ } })}>
-                <input {...getInputProps()} />
-                <p style={{fontFamily: "Roboto"}}>Drag and drop a PNG file here or click to select: {this.state.image == null ? "No Image" : "Image Uploaded"}</p>
-              </div>
-            )}
-          </Dropzone>
-
-          <textarea
-            value={userInput}
-            onChange={this.handleUserInputChange}
-            placeholder="Enter your input here..."
-            style={{
-              width: "90%",
-              height: "10%",
-              padding: "10px",
-              border: "1px solid #ccc",
-              resize: "none",
-            }}
-          />
-          <button style={{
-            width: "93%",
-            padding: "10px 20px",
-            borderRadius: "5px",
-            backgroundColor: "#007bff",
-            color: "#fff",
-            border: "none",
-            cursor: "pointer",
-            zIndex: 10,
-          }}
-          onClick={this.handleSendToApi}>Generate Image</button> {/* Add this button */}
-
+              {({ getRootProps, getInputProps }) => (
+                <div
+                  {...getRootProps({
+                    style: {
+                      /* Add styles as needed */
+                    },
+                  })}
+                >
+                  <input {...getInputProps()} />
+                  <p style={{ fontFamily: "Roboto" }}>
+                    Drag and drop a PNG file here or click to select:{" "}
+                    {this.state.image == null ? "No Image" : "Image Uploaded"}
+                  </p>
+                </div>
+              )}
+            </Dropzone>
+            <textarea
+              value={userInput}
+              onChange={this.handleUserInputChange}
+              placeholder="Enter your input here..."
+              style={{
+                width: "90%",
+                height: "10%",
+                padding: "10px",
+                border: "1px solid #ccc",
+                resize: "none",
+              }}
+            />
+            <button
+              style={{
+                width: "93%",
+                padding: "10px 20px",
+                borderRadius: "5px",
+                backgroundColor: "#007bff",
+                color: "#fff",
+                border: "none",
+                cursor: "pointer",
+                zIndex: 10,
+              }}
+              onClick={this.handleSendToApi}
+            >
+              Generate Image
+            </button>{" "}
+            {/* Add this button */}
           </div>
-         
         </div>
       );
     }
@@ -252,12 +287,12 @@ class Map1 extends React.Component {
           </GoogleMap>
           {showStreetView && (
             <button
-            onClick={() => {
-              toast("Screenshot Saved!");
-              setTimeout(() => {
+              onClick={() => {
+                toast("Screenshot Saved!");
+                setTimeout(() => {
                   this.takeScreenshotBool();
-              }, 1000); // 3000 milliseconds = 3 seconds
-          }}
+                }, 1000); // 3000 milliseconds = 3 seconds
+              }}
               style={{
                 position: "absolute",
                 bottom: "20px",
