@@ -5,12 +5,15 @@ import {
   StreetViewPanorama,
 } from "@react-google-maps/api";
 import html2canvas from "html2canvas";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const APIkey = "AIzaSyCiUPBb4wLUT7z6z5jRTgR2q2LCpcdVgno";
 const defaultCenter = {
   lat: 42.045597,
   lng: -87.688568,
 };
+
 
 class Map1 extends React.Component {
   constructor(props) {
@@ -103,21 +106,25 @@ class Map1 extends React.Component {
           <iframe
             title="chatbot"
             src="https://embed.pickaxeproject.com/axe?id=ZoneIn_A5TT2&mode=embed_gold&host=beta&..."
-            style={{ width: "50%", height: "100%", border: "none" }}
+            style={{ width: "50%", height: "90%", border: "none" }}
             frameBorder="0"
           />
+          <div style={{width:"50%", height:"100%", backgroundColor: "#fff"}}>
+            <div style={{width:"100%", height:"90%", backgroundColor: "#000"}} />
           <textarea
             value={userInput}
             onChange={this.handleUserInputChange}
-            placeholder="Enter your input here..."
+            placeholder="Enter our input here..."
             style={{
-              width: "50%",
-              height: "100%",
+              width: "100%",
+              height: "10%",
               padding: "10px",
               border: "1px solid #ccc",
               resize: "none",
             }}
           />
+          </div>
+         
         </div>
       );
     }
@@ -177,7 +184,7 @@ class Map1 extends React.Component {
           </GoogleMap>
           {showStreetView && (
             <button
-              onClick={this.takeScreenshot}
+              onClick={() => toast("Screenshot Saved!")}
               style={{
                 position: "absolute",
                 bottom: "20px",
@@ -194,6 +201,7 @@ class Map1 extends React.Component {
               Take Screenshot
             </button>
           )}
+          <ToastContainer />
         </LoadScriptNext>
       </div>
     );
