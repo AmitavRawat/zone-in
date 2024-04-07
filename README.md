@@ -21,6 +21,15 @@ Our approach for the stable diffusion model is rather unique - believe us. Initi
 
 ### What it does
 
+In today's rapidly evolving urban landscapes, "Zone In" is a much-needed tool that bridges the gap between technology and urban planning. It empowers users to make informed decisions, comply with zoning regulations, and visualize future developments, all from the comfort of their own homes.
+
+"Zone In" is a cutting-edge web application designed to make urban planning and zoning regulation compliance friendlier and accessible. We open with a visually captivating landing page created using Three.js, which is seamlessly integrated with React.js and Material UI to ensure a smooth and engaging user experience.
+
+The application utilizes the Google Maps API to display a detailed map of the user's area. Users can search for their address and explore their surroundings in real-time through the street view feature, providing a comprehensive understanding of their neighborhood's layout and infrastructure.One of the standout features of "Zone In" is its ability to capture images of users' houses. This is powered by Selenium, which automates the process, ensuring accuracy and efficiency.
+
+Once the user captures the desired image, they can interact with our chatbot, which is designed to answer any zoning regulation questions swiftly and accurately. We are aware of users' zone code through the address they typed in, This feature is invaluable for homeowners, architects, and urban planners who need quick answers to complex zoning questions.
+
+Additionally, "Zone In" boasts a second chatbot powered by advanced image generation technologies. This chatbot allows users to envision potential changes to their property or neighborhood, aiding in the planning and approval process of urban development projects. Again, the screenshot user saved helps us create realistic real-time images all in no time.
 
 ### Challenges we ran into
 
@@ -34,3 +43,8 @@ user asked for using street view capture which enabled us to make our own model 
 
 
 ### Whats next?
+
+1) We want to expand from just subsections of Evanston to bigger cities which will need more computing resources.
+2) We only had sufficient time to come up with a model for conversational AI and a model for image generation. We would want to make the image rendering much better and more accurate.
+3) Integration of Advanced Technologies-  we are exploring the integration of cutting-edge technologies such as augmented reality (AR) and virtual reality (VR) into "Zone In." These technologies have the potential to provide users with an immersive experience, allowing them to interact with their urban environment in new and exciting ways.
+4) Finally, Collaboration with Local Authorities to ensure that "Zone In" is as effective and relevant as possible, we plan to collaborate closely with local government agencies and urban planning departments. By working together, we can ensure that our tool aligns with the latest zoning regulations and urban development strategies, providing users with the most up-to-date information.
