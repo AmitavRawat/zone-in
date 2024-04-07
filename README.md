@@ -6,7 +6,7 @@ American city planning is complex, and the intricate web of zoning codes stands 
 
 Our solution - Zone In! Our beacon of clarity in the convoluted maze of urban zoning. With an emphasis on user-friendly interfaces and straightforward information retrieval, our project aspires to demystify zoning regulations by transforming their perplexities into understanding. Leveraging the Google Maps API, Zone In provides a unique visual experience where users can not only navigate the street view to capture a present image of their residence but can also envision potential changes through advanced image generation technologies.
 
-So now, our users are one prompt away from knowing if they can exapand their drive-way and one prompt away from seeing what this drive-way would look like! YES
+So now, our users are one prompt away from knowing if they can exapand their drive-way and one prompt away from seeing what this drive-way would look like! YES!
 
 ### How we built this 
 
