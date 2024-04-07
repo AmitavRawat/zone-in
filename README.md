@@ -2,7 +2,7 @@
 
 ### Background
 
-American city planning is complex, and the intricate web of zoning codes stands as a testament to organized development. Navigating the labyrinth of zoning codes can be a nightmare for homeowners and businesses. Simple queries like, “Can I build a deck in my backyard?” or “Is a home-based daycare permissible?” become daunting expeditions through voluminous texts.
+American city planning is complex, and the intricate web of zoning codes stands as a testament to organized development. Navigating the labyrinth of zoning codes can be a nightmare for homeowners and businesses. Simple queries like, “Can I build a deck in my backyard?” or “Is a home-based daycare permissible?” become daunting expeditions through pages texts.
 
 Our solution - Zone In! Our beacon of clarity in the convoluted maze of urban zoning. With an emphasis on user-friendly interfaces and straightforward information retrieval, our project aspires to demystify zoning regulations, transforming perplexity into understanding. Leveraging the Google Maps API, Zone In provides a unique visual experience where users can not only navigate the street view to capture a present image of their residence but can also envision potential changes through advanced image generation technologies.
 
