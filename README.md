@@ -1,4 +1,4 @@
-# ZONE IN - Urban Planning , now made more accessible and less daunting!
+# ZONE IN - Urban Zoning , now made more accessible and less daunting!
 
 ### Background
 
@@ -11,7 +11,7 @@ So now, our users are one prompt away from knowing if they can exapand their dri
 ### How we built this 
 
 
-### ### What it does
+### What it does
 
 
 ### Challenges we ran into
