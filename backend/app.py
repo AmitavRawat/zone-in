@@ -27,7 +27,7 @@ Context: {context}
 Answer:
 """
 
-openai_api_key = "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"
+openai_api_key = "INSERT OPEN AI API KEY"
 
 @cl.on_chat_start
 async def on_chat_start():

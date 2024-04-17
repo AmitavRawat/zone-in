@@ -10,7 +10,7 @@ import requests
 app = Flask(__name__)
 
 # Set the OPENAI_API_KEY environment variable
-openai.api_key = "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"
+openai.api_key = "INSERT OPEN AI API KEY"
 
 
 def load_model():
